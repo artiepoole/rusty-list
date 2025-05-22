@@ -1,7 +1,7 @@
 use clap::Parser;
 use std::path::PathBuf;
-
 use env_logger;
+use log::debug;
 
 mod printers;
 use crate::printers::{print_directory, print_recursive};
@@ -37,11 +37,11 @@ fn main() {
 
     let args = Cli::parse();
 
-    println!("long mode: {:?}", args.long_mode);
-    println!("all mode: {:?}", args.all);
-    println!("file order: {:?}", args.directory_order);
-    println!("recursive mode: {:?}", args.recursive);
-    println!("max depth: {}", args.depth);
+    debug!("long mode: {:?}", args.long_mode);
+    debug!("all mode: {:?}", args.all);
+    debug!("file order: {:?}", args.directory_order);
+    debug!("recursive mode: {:?}", args.recursive);
+    debug!("max depth: {}", args.depth);
     let path = args.path.unwrap();
     if !path.exists() {
         panic!("path '{}' doesn't exist", path.display());
