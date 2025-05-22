@@ -5,10 +5,7 @@ fn main() {
     let mut args: Vec<String> = env::args().collect();
     // remove first argument which is self
     args.remove(0);
-    let pathstr = args.pop().unwrap_or_else(|| "./".to_owned());
-
-
-    let path = PathBuf::from(pathstr);
+    let path = PathBuf::from(args.pop().unwrap_or_else(|| "./".to_owned()));
     
     println!("path: {:?}", path.display());
 
