@@ -2,11 +2,13 @@ use clap::Parser;
 use std::path::PathBuf;
 use env_logger;
 use log::debug;
+mod directory_printers;
 
-mod shallow_printer;
-mod recursive_printer;
-use crate::recursive_printer::{RecursivePrinter};
-use crate::shallow_printer::{print_directory};
+
+use directory_printers::{
+    recursive_printer::{RecursivePrinter},
+    shallow_printer::{print_directory}
+};
 
 #[derive(Parser)]
 #[command(version, about, long_about = None)]
@@ -49,11 +51,11 @@ fn main() {
         panic!("path '{}' doesn't exist", path.display());
     }
     if args.recursive {
-        let mut printer = RecursivePrinter{
+        let mut path_printer = RecursivePrinter{
             max_depth: args.depth,
             current_depth: 0
         };
-        printer.print_recursive(&path);
+        path_printer.print_directory_recursive(&path);
     } else {
         print_directory(&path)
     }

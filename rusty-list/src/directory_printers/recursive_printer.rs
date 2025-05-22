@@ -10,7 +10,7 @@ pub struct RecursivePrinter {
 }
 
 impl RecursivePrinter {
-    pub fn print_recursive(&mut self, path: &PathBuf) {
+    pub fn print_directory_recursive(&mut self, path: &PathBuf) {
         self.current_depth += 1;
         debug!("Recursive depth increased to: {}", self.current_depth);
 
@@ -18,7 +18,7 @@ impl RecursivePrinter {
         for dir_entry in paths {
             let path = dir_entry.unwrap().path();
             if metadata(&path).unwrap().is_dir() && (self.max_depth == 0 || self.current_depth < self.max_depth) {
-                self.print_recursive(&path);
+                self.print_directory_recursive(&path);
             } else {
                 println!("{}", path.display());
             }
