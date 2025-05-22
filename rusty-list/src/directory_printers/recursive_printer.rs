@@ -1,7 +1,6 @@
-use std::fs;
-use std::fs::metadata;
-use std::path::PathBuf;
 use log::debug;
+use std::{fs, io};
+use std::path::PathBuf;
 
 #[derive(Debug)]
 pub struct RecursivePrinter {
@@ -10,20 +9,22 @@ pub struct RecursivePrinter {
 }
 
 impl RecursivePrinter {
-    pub fn print_directory_recursive(&mut self, path: &PathBuf) {
+    pub fn print_directory_recursive(&mut self, path: &PathBuf) -> io::Result<()> {
         self.current_depth += 1;
         debug!("Recursive depth increased to: {}", self.current_depth);
 
-        let paths = fs::read_dir(path).unwrap();
+        let paths = fs::read_dir(path)?;
         for dir_entry in paths {
-            let path = dir_entry.unwrap().path();
-            if metadata(&path).unwrap().is_dir() && (self.max_depth == 0 || self.current_depth < self.max_depth) {
-                self.print_directory_recursive(&path);
+            let path = dir_entry?;
+            if path.path().is_dir() && (self.max_depth == 0 || self.current_depth < self.max_depth) 
+            {
+                self.print_directory_recursive(&path.path()).expect("Failed to recursively print");
             } else {
-                println!("{}", path.display());
+                println!("{:?}", path.path());
             }
         }
         self.current_depth -= 1;
         debug!("Recursive depth decreased to: {}", self.current_depth);
+        Ok(())
     }
 }

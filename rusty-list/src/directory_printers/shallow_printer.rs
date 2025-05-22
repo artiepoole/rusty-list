@@ -1,9 +1,11 @@
-use std::fs;
 use std::path::PathBuf;
+use std::{fs, io};
 
-pub fn print_directory(path: &PathBuf) {
-    let paths = fs::read_dir(path).unwrap();
+pub fn print_directory(path: &PathBuf) -> io::Result<()> {
+    let paths = fs::read_dir(path)?;
     for path in paths {
-        println!("{}", path.unwrap().path().display());
+        let path = path?;
+        println!("{:?}", path.path());
     }
+    Ok(())
 }

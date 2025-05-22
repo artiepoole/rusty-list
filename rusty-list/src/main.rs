@@ -1,14 +1,10 @@
 use clap::Parser;
-use std::path::PathBuf;
 use env_logger;
 use log::debug;
+use std::path::PathBuf;
 mod directory_printers;
 
-
-use directory_printers::{
-    recursive_printer::{RecursivePrinter},
-    shallow_printer::{print_directory}
-};
+use directory_printers::{recursive_printer::RecursivePrinter, shallow_printer::print_directory};
 
 #[derive(Parser)]
 #[command(version, about, long_about = None)]
@@ -17,7 +13,7 @@ struct Cli {
     /// The starting directory for search
     #[arg(default_value = "./")]
     path: PathBuf,
-    
+
     // optional flags
     /// Use a long listing format
     #[arg(short)]
@@ -51,12 +47,14 @@ fn main() {
         panic!("path '{}' doesn't exist", path.display());
     }
     if args.recursive {
-        let mut path_printer = RecursivePrinter{
+        let mut path_printer = RecursivePrinter {
             max_depth: args.depth,
-            current_depth: 0
+            current_depth: 0,
         };
-        path_printer.print_directory_recursive(&path);
+        path_printer
+            .print_directory_recursive(&path)
+            .expect("Failed to print paths");
     } else {
-        print_directory(&path)
+        print_directory(&path).expect("Failed to print directory");
     }
 }
