@@ -43,9 +43,9 @@ fn main() {
     debug!("recursive mode: {:?}", args.recursive);
     debug!("max depth: {}", args.depth);
     let path = args.path;
-    if !path.exists() {
-        panic!("path '{}' doesn't exist", path.display());
-    }
+    // if !path.exists() {
+    //     panic!("path '{}' doesn't exist", path.display());
+    // }
     if args.recursive {
         let mut path_printer = RecursivePrinter {
             max_depth: args.depth,
@@ -53,8 +53,8 @@ fn main() {
         };
         path_printer
             .print_directory_recursive(&path)
-            .expect("Failed to print paths");
+            .expect(&format!("Failed to print root dir '{:?}' recursively ", path));
     } else {
-        print_directory(&path).expect("Failed to print directory");
+        print_directory(&path).expect(&format!("Failed to print root dir'{:?}'", path));
     }
 }

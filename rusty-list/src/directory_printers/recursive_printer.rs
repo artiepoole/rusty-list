@@ -18,7 +18,7 @@ impl RecursivePrinter {
             let path = dir_entry?;
             if path.path().is_dir() && (self.max_depth == 0 || self.current_depth < self.max_depth) 
             {
-                self.print_directory_recursive(&path.path()).expect("Failed to recursively print");
+                self.print_directory_recursive(&path.path()).expect(&format!("Failed to recursively print {:?}", path));
             } else {
                 println!("{:?}", path.path());
             }
