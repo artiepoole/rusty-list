@@ -1,10 +1,10 @@
 use clap::Parser;
-use std::path::PathBuf;
 use env_logger;
 use log::debug;
+use std::path::PathBuf;
+mod directory_printers;
 
-mod printers;
-use crate::printers::{print_directory, print_recursive};
+use directory_printers::{recursive_printer::RecursivePrinter, shallow_printer::print_directory};
 
 #[derive(Parser)]
 #[command(version, about, long_about = None)]
@@ -12,7 +12,7 @@ struct Cli {
     // optional positional
     /// The starting directory for search
     #[arg(default_value = "./")]
-    path: Option<PathBuf>,
+    path: PathBuf,
 
     // optional flags
     /// Use a long listing format
@@ -36,19 +36,25 @@ fn main() {
     env_logger::init();
 
     let args = Cli::parse();
-
+    debug!("search root: {:?}", args.path);
     debug!("long mode: {:?}", args.long_mode);
     debug!("all mode: {:?}", args.all);
     debug!("file order: {:?}", args.directory_order);
     debug!("recursive mode: {:?}", args.recursive);
     debug!("max depth: {}", args.depth);
-    let path = args.path.unwrap();
-    if !path.exists() {
-        panic!("path '{}' doesn't exist", path.display());
-    }
+    let path = args.path;
+    // if !path.exists() {
+    //     panic!("path '{}' doesn't exist", path.display());
+    // }
     if args.recursive {
-        print_recursive(&path, args.depth)
+        let mut path_printer = RecursivePrinter {
+            max_depth: args.depth,
+            current_depth: 0,
+        };
+        path_printer
+            .print_directory_recursive(&path)
+            .expect(&format!("Failed to print root dir '{:?}' recursively ", path));
     } else {
-        print_directory(&path)
+        print_directory(&path).expect(&format!("Failed to print root dir'{:?}'", path));
     }
 }
