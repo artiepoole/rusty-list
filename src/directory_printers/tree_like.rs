@@ -28,5 +28,6 @@ pub fn tree_like_printer(all_paths: &Vec<PathBuf>) {
     for path in all_paths {
         println!("{:?}", path);
     }
+    println!("{}{}{}{}{}",VERT, TEE, HORZ, HOOK, HORZ)
     
 }
