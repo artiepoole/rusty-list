@@ -37,6 +37,9 @@ struct Cli {
     /// limit the depth for recursion
     #[arg(short, long, default_value = "0")]
     depth: usize,
+    /// enable printing as if calling "tree"
+    #[arg(short, long)]
+    tree_like: bool,
 }
 
 fn main() {
@@ -68,8 +71,11 @@ fn main() {
             .expect(&format!("Failed to print root dir'{:?}'", path));
     }
 
-
-    let form = 1;
+    
+    let mut form = 1;
+    if args.tree_like {
+        form = 2
+    }
     match form {
         0 => { // pure alphabetical mode
             sort_purely_alphabetically(&mut all_paths);
