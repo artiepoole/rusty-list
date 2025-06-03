@@ -20,7 +20,7 @@ pub fn depth_alpha_sort(all_paths: &mut Vec<PathBuf>) {
         if depth_a == depth_b {
             a.cmp(b) // alphabetical fallback
         } else {
-            depth_a.cmp(&depth_b)
+            depth_b.cmp(&depth_a)
         }
     });
 }
