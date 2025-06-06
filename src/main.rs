@@ -6,10 +6,10 @@ mod directory_printers;
 mod directory_scrapers;
 mod directory_sorters;
 
-use directory_scrapers::{recursive_scraper::RecursiveScraper, shallow_scraper::scrape_directory};
 
 use crate::directory_printers::simple::simple_printer;
 use crate::directory_printers::tree_like::tree_like_printer;
+use crate::directory_scrapers::scraper::scrape_fs;
 use crate::directory_sorters::alphabetical::sort_purely_alphabetically;
 use crate::directory_sorters::depth_based::{depth_alpha_sort, depth_only_sort};
 
@@ -42,10 +42,25 @@ struct Cli {
     tree_like: bool,
 }
 
+#[derive(Debug)]
+pub enum FsEntry {
+    File {
+        path: PathBuf,
+        depth: usize,
+    },
+    Dir {
+        path: PathBuf,
+        children: Vec<FsEntry>,
+        depth: usize,
+    },
+}
+
+
 fn main() {
     env_logger::init();
 
     let args = Cli::parse();
+    //
     debug!("search root: {:?}", args.path);
     debug!("long mode: {:?}", args.long_mode);
     debug!("all mode: {:?}", args.all);
@@ -55,23 +70,13 @@ fn main() {
     let path = args.path;
     let mut all_paths = Vec::<PathBuf>::new();
 
-    if args.recursive {
-        let mut path_printer = RecursiveScraper {
-            max_depth: args.depth,
-            current_depth: 0,
-        };
-        path_printer
-            .scrape_directory_recursive(&path, &mut all_paths)
-            .expect(&format!(
-                "Failed to print root dir '{:?}' recursively ",
-                path
-            ));
-    } else {
-        scrape_directory(&path, &mut all_paths)
-            .expect(&format!("Failed to print root dir'{:?}'", path));
-    }
 
-    
+
+    dbg!(scrape_fs(path, 0, 1)).expect("TODO: panic message");
+
+    // TODO: consider symlink
+
+    // TODO: enum this
     let mut form = 1;
     if args.tree_like {
         form = 2

@@ -1,4 +1,4 @@
-use std::path::PathBuf;
+use std::path::{Path, PathBuf};
 
 
 static VERT: char = '│';
@@ -23,7 +23,14 @@ pub fn tree_like_printer(all_paths: &Vec<PathBuf>) {
     // 6) print the appropriate characters :D
     // 
     // need to be able to store all indentation levels to the left of this line...  
-
+    let prev_parent = match all_paths.first() {
+        Some(path) => path,
+        None => {
+            return
+                // print something as warning
+        } 
+    };
+    
     println!("WARN  tree like printing is WIP. Resorting to a simple print.");
     for path in all_paths {
         println!("{:?}", path);
